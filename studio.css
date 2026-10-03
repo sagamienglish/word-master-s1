@@ -117,7 +117,7 @@ button[data-choice-key]::before{content:attr(data-choice-key);position:absolute;
 #setup-options-container label:has(input:checked){border-color:var(--color-primary)!important;background:var(--color-primaryLight)!important;color:var(--color-primary)!important;box-shadow:inset 0 0 0 1px var(--color-primary)}
 #setup-options-container label:has(input:focus-visible){outline:3px solid var(--color-primary);outline-offset:3px}
 #setup-options-container input{position:absolute;opacity:0;width:1px;height:1px}
-#setup-options-container label:has(input)::after{content:'';width:6px;height:6px;border-radius:50%;background:transparent;flex-shrink:0}
+#setup-options-container label:has(input)::after{content:'';position:absolute;right:10px;top:10px;width:6px;height:6px;border-radius:50%;background:transparent;pointer-events:none}
 #setup-options-container label:has(input:checked)::after{background:currentColor}
 #setup-options-container label:has(input[name="opt_player"]){min-height:92px;gap:8px}
 #setup-options-container label:has(input[name="opt_player"])::after{position:absolute;right:10px;top:10px}
