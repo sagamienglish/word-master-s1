@@ -851,14 +851,14 @@
         <button onclick="openThemeModal()" class="flex flex-col items-center p-2 text-slate-400"><i data-lucide="palette" class="w-5 h-5 mb-1"></i><span class="text-[10px] font-bold">Theme</span></button>
     </nav>
 
-    <div id="modal-setup" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl transform transition-all animate-pop border border-slate-100">
+    <div id="modal-setup" role="dialog" aria-modal="true" aria-labelledby="setup-title" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="setup-panel bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl transform transition-all animate-pop border border-slate-100">
             <div class="flex justify-between items-center mb-6">
-                <h2 id="setup-title" class="text-xl font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="settings-2" class="w-5 h-5 text-primary"></i> 準備</h2>
-                <button onclick="closeModal('modal-setup')" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <div class="setup-heading"><span class="setup-eyebrow">READY TO LEARN</span><h2 id="setup-title" class="text-xl font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="settings-2" class="w-5 h-5 text-primary"></i> 準備</h2></div>
+                <button aria-label="閉じる" onclick="closeModal('modal-setup')" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div id="setup-options-container" class="mb-6"></div>
-            <button onclick="confirmSetup()" class="w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-xl transition-colors text-sm flex justify-center items-center gap-2 cursor-pointer"><i data-lucide="play" class="w-4 h-4 text-white"></i> スタート</button>
+            <button onclick="confirmSetup()" class="setup-start w-full bg-primary hover:bg-primaryHover text-white font-bold py-3 rounded-xl transition-colors text-sm flex justify-center items-center gap-2 cursor-pointer"><i data-lucide="play" class="w-4 h-4 text-white"></i> 始める <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
         </div>
     </div>
 
@@ -1797,9 +1797,12 @@
         let tdDifficulty = 'hard';
         function openSetupModal(mode) {
             pendingMode = mode;
+            const setupModes = {learn:['総合学習','layers'], '4choice':['４択クイズ','list-checks'], typing_drill:['タイピング','keyboard'], listening_drill:['リスニング','headphones'], sentence_choice:['例文４択','text-cursor-input'], matching:['マッチング','puzzle'], timetrial:['タイムトライアル','timer'], vs:['カルタ対戦','swords'], invader:['英単語インベーダー','rocket']};
+            const [modeName, modeIcon] = setupModes[mode] || ['学習','book-open'];
+            document.getElementById('setup-title').innerHTML = `<span class="setup-mode-icon"><i data-lucide="${modeIcon}"></i></span>${modeName}`;
             const container = document.getElementById('setup-options-container'); container.innerHTML = '';
 
-            container.innerHTML = `<p class="text-sm font-bold text-slate-600 text-center pb-3">現在選択中のカテゴリー「${currentCategory}」から出題します。</p>`;
+            container.innerHTML = `<div class="setup-material"><span>出題教材</span><strong>${categoryDisplayName(currentCategory)}</strong></div>`;
 
             if(mode !== 'vs' && mode !== 'invader') {
                 container.innerHTML += `
@@ -1858,7 +1861,7 @@
             }
             
             if(mode === 'vs' || mode === 'invader' || mode === 'matching' || mode === 'listening_drill') {
-                const label1 = mode === 'vs' || mode === 'invader' ? '1人で (vs CPU)' : '1人でプレイ';
+                const label1 = mode === 'vs' || mode === 'invader' ? 'CPUと対戦' : 'ひとりで';
                 container.innerHTML += `
                     <label class="block text-xs font-bold text-slate-400 mb-2 uppercase mt-4">プレイ人数</label>
                     <div class="flex gap-2">
@@ -1868,7 +1871,7 @@
                         </label>
                         <label class="flex-1 bg-surface border border-slate-200 rounded-xl p-3 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary transition-colors font-bold text-sm text-slate-700 shadow-sm">
                             <i data-lucide="users" class="w-5 h-5 text-red-500"></i>
-                            <div><input type="radio" name="opt_player" value="2" class="accent-primary"> 2人で (対人戦)</div>
+                            <div><input type="radio" name="opt_player" value="2" class="accent-primary"> ふたりで対戦</div>
                         </label>
                     </div>`;
             }
