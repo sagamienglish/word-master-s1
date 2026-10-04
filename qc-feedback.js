@@ -38,11 +38,21 @@ function qcExampleHtml(target) {
   const word=(example.answer||target.en).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   const parts=full.split(new RegExp(`(\\b${word}\\b)`,'gi'));
   const highlighted=parts.map((p,i)=>i%2?`<strong>${escapeHtml(p)}</strong>`:escapeHtml(p)).join('');
-  html+=`<div class="qc-example"><span class="qc-feedback-label">例文</span><p class="qc-example-en">${highlighted}</p><p class="qc-example-jp">${escapeHtml(example.jp)}</p></div>`;
+  html+=`<div class="qc-example"><p class="qc-example-en">${highlighted}</p><p class="qc-example-jp">${escapeHtml(example.jp)}</p></div>`;
  }
  if(tip)html+=`<div class="qc-memory"><span class="qc-feedback-label">覚えるヒント</span><p>${escapeHtml(tip)}</p></div>`;
  return html;
 }
+function handleQcNextKey(event) {
+ if(event.key!=='Enter'||event.repeat||event.isComposing||event.ctrlKey||event.altKey||event.metaKey||event.shiftKey)return;
+ if(typeof activeScreen==='undefined'||activeScreen!=='4choice')return;
+ if(event.target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(event.target?.tagName))return;
+ if([...document.querySelectorAll('[id^="modal-"]')].some(m=>!m.classList.contains('hidden')))return;
+ const next=document.querySelector('#qc-feedback:not(.hidden) .qc-next');
+ if(!next)return;
+ event.preventDefault();next.click();
+}
+document.addEventListener('keydown',handleQcNextKey);
 function resetQcFeedback() {
  document.getElementById('qc-answer').textContent='';
  document.getElementById('qc-answer').classList.add('hidden');
