@@ -499,7 +499,7 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 10px; }
     </style>
-    <link rel="stylesheet" href="studio.css?v=20261004-learning2">
+    <link rel="stylesheet" href="studio.css?v=20261004-growth1">
     <link rel="stylesheet" href="collection.css?v=20261004-learning2">
     <link rel="stylesheet" href="exploration.css?v=20261004-learning2">
 </head>
@@ -544,7 +544,7 @@
                         </div>
                     </div><div class="studio-legend"><div><span><i class="studio-dot dot-o"></i>覚えた</span><b id="dash-count-o">0</b></div><div><span><i class="studio-dot dot-t"></i>あやふや</span><b id="dash-count-t">0</b></div><div><span><i class="studio-dot dot-x"></i>ミス</span><b id="dash-count-x">0</b></div><div><span><i class="studio-dot dot-new"></i>未学習</span><b id="studio-unseen">0</b></div></div></div><p id="studio-category-caption" class="studio-caption"></p></div>
                 <div id="studio-growth" class="studio-growth" aria-label="習得語数の推移"></div>
-                <div class="studio-time"><h2>学習時間</h2><div id="time-count">0分</div><span class="studio-caption">累計</span><div class="studio-stamina"><span><i data-lucide="zap" aria-hidden="true"></i>スタミナ</span><b><span class="stamina-display">10</span><small>/10</small></b></div><div id="stamina-timer">MAX</div></div>
+                <div class="studio-time"><h2>学習時間</h2><div id="time-count">0分</div><span class="studio-caption">累計</span><div class="studio-stamina"><span><i data-lucide="zap" aria-hidden="true"></i>スタミナ</span><b><span class="stamina-display">20</span><small>/20</small></b></div><div id="stamina-timer">MAX</div></div>
             </section>
             
             <section class="studio-practice"><div class="studio-section-head"><h2>好きな練習を選ぶ</h2><span>目的に合わせて</span></div><div class="studio-drills"><button type="button" class="studio-drill" onclick="initAudio(); openSetupModal('4choice')">
@@ -872,6 +872,7 @@
         <footer><button type="button" onclick="beginLearnPreviewSession()">４択を始める <span aria-hidden="true">→</span></button></footer>
       </div>
     </div>
+    <div id="modal-companion-growth" role="dialog" aria-modal="true" aria-labelledby="growth-title" class="hidden"></div>
     <div id="modal-theme" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-surface rounded-2xl p-5 md:p-6 w-full max-w-xl shadow-xl animate-pop border border-slate-100">
             <div class="flex justify-between items-center mb-5">
@@ -1448,7 +1449,7 @@
         }
         let wordStatus = readStoredJson('wm_studio_v1_word_status', {});
         let cpuLevel = parseInt(window.localStorage.getItem('wm_studio_v1_cpu')) || 1;
-        let stamina = parseInt(window.localStorage.getItem('wm_studio_v1_stamina')); if(isNaN(stamina)) stamina = 10;
+        let stamina = parseInt(window.localStorage.getItem('wm_studio_v1_stamina')); if(isNaN(stamina)) stamina = 20; stamina = Math.max(0,Math.min(20,stamina));
         let staminaTime = parseInt(window.localStorage.getItem('wm_studio_v1_stamina_time')) || Date.now();
         let categoryExp = readStoredJson('wm_studio_v1_category_exp', {});
         if(Object.keys(categoryExp).length === 0 && parseInt(window.localStorage.getItem('wm_studio_v1_exp'))) {
@@ -1585,14 +1586,14 @@
 
         function updateStaminaLogic() {
             let now = Date.now();
-            if(stamina < 10) {
+            if(stamina < 20) {
                 let rec = Math.floor((now - staminaTime) / 600000); 
-                if(rec > 0) { stamina = Math.min(10, stamina + rec); staminaTime += rec * 600000; window.localStorage.setItem('wm_studio_v1_stamina', stamina); window.localStorage.setItem('wm_studio_v1_stamina_time', staminaTime); }
+                if(rec > 0) { stamina = Math.min(20, stamina + rec); staminaTime += rec * 600000; window.localStorage.setItem('wm_studio_v1_stamina', stamina); window.localStorage.setItem('wm_studio_v1_stamina_time', staminaTime); }
             }
             document.querySelectorAll('.stamina-display').forEach(e => e.innerText = stamina);
             const timerEl = document.getElementById('stamina-timer');
             if(timerEl) {
-                if (stamina < 10) {
+                if (stamina < 20) {
                     let rem = 600000 - ((now - staminaTime) % 600000);
                     timerEl.innerText = `${Math.floor(rem / 60000)}:${Math.floor((rem % 60000) / 1000).toString().padStart(2, '0')}`;
                 } else { timerEl.innerText = `MAX`; }
@@ -1600,7 +1601,7 @@
         }
 
         function useStamina() {
-            if(stamina > 0) { if(stamina === 10) staminaTime = Date.now(); stamina--; window.localStorage.setItem('wm_studio_v1_stamina', stamina); window.localStorage.setItem('wm_studio_v1_stamina_time', staminaTime); updateStaminaLogic(); return true; }
+            if(stamina > 0) { if(stamina === 20) staminaTime = Date.now(); stamina--; window.localStorage.setItem('wm_studio_v1_stamina', stamina); window.localStorage.setItem('wm_studio_v1_stamina_time', staminaTime); updateStaminaLogic(); return true; }
             showResult("スタミナ不足", "回復するまでお待ちください。", "", "info"); return false;
         }
 
@@ -1745,6 +1746,7 @@
             resetMatchingVsSeries();
             resetInvaderSeries();
             navTo('dashboard');
+            showPendingCompanionGrowth();
         }
         function showWinnerBurst(winnerName, winnerPlayer, subText = 'BATTLE CLEAR', kicker = 'WINNER') {
             const burst = document.getElementById('global-winner-burst');
@@ -3433,7 +3435,8 @@
     <script src="qc-feedback.js?v=20261004-highlight3"></script>
     <script src="learn-preview.js?v=20261004-learning2"></script>
     <script src="studio.js?v=20261004-learning2"></script>
-    <script src="collection.js?v=20261004-learning2"></script>
+    <script src="companion-growth.js?v=20261004-growth1"></script>
+    <script src="collection.js?v=20261004-growth1"></script>
     <script src="exploration.js?v=20261004-learning2"></script>
     <script src="choice-shortcuts.js?v=20261004-learning2"></script>
 <script src="buddy-interactions.js?v=20261004-learning2"></script>
