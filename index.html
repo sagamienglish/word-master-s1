@@ -502,7 +502,7 @@
     <link rel="stylesheet" href="studio.css?v=20261004-growth2">
     <link rel="stylesheet" href="collection.css?v=20261004-learning2">
     <link rel="stylesheet" href="exploration.css?v=20261004-learning2">
-<link rel="stylesheet" href="daily-boss.css?v=7"></head>
+<link rel="stylesheet" href="daily-boss.css?v=7"><link rel="stylesheet" href="theme-ui.css?v=2"></head>
 <body class="flex flex-col">
 
     <header class="studio-header">
@@ -625,7 +625,7 @@
                 <div id="learn-4choice" class="w-full flex-col items-center hidden">
                     <button id="learn-audio-btn" onclick="replayAudio()" class="mb-6 text-primary bg-primaryLight p-4 rounded-full transition-colors hidden cursor-pointer"><i data-lucide="volume-2" class="w-8 h-8"></i></button>
                     <div id="learn-q-text" class="text-3xl md:text-5xl font-extrabold text-slate-800 mb-10 text-center w-full px-2 break-words"></div>
-                    <div id="learn-choices" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 px-2"></div>
+                    <div id="learn-choices" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 px-2"></div><div id="learn-choice-feedback" class="hidden" aria-live="polite"></div>
                 </div>
                 <!-- Typing -->
                 <div id="learn-typing" class="w-full flex-col items-center hidden">
@@ -873,13 +873,10 @@
       </div>
     </div>
     <div id="modal-companion-growth" role="dialog" aria-modal="true" aria-labelledby="growth-title" class="hidden"></div>
-    <div id="modal-theme" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-surface rounded-2xl p-5 md:p-6 w-full max-w-xl shadow-xl animate-pop border border-slate-100">
-            <div class="flex justify-between items-center mb-5">
-                <h2 class="text-xl font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="palette" class="w-5 h-5 text-primary"></i> テーマ設定</h2>
-                <button onclick="closeModal('modal-theme')" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <div id="theme-list" class="grid grid-cols-1 gap-3 max-h-[68vh] overflow-y-auto pr-1"></div>
+    <div id="modal-theme" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="theme-heading">
+        <div class="theme-panel">
+            <div class="theme-panel-header"><div><h2 id="theme-heading">テーマ</h2><p>学習空間を、好きな色に。</p></div><button onclick="closeModal('modal-theme')" class="theme-close" aria-label="テーマを閉じる"><i data-lucide="x" aria-hidden="true"></i></button></div>
+            <div id="theme-list"></div>
         </div>
     </div>
 
@@ -1769,40 +1766,26 @@
             const currentTheme = window.localStorage.getItem('wm_studio_v1_theme') || 'default';
             const themes = [
                 { id: 'default', name: 'デフォルト', req: 0, color: '#3B5EE8' },
-                { id: 'pistachio', name: 'クラッシュ・ピスタチオ', req: 0, color: '#36A46F' },
-                { id: 'lavender', name: 'シャイニー・ラベンダー', req: 200, color: '#8B5CF6' },
-                { id: 'skywash', name: 'スカイ・ウォッシュ', req: 400, color: '#0EA5E9' },
-                { id: 'apricot', name: 'ジューシー・アプリコット', req: 600, color: '#F97316' },
-                { id: 'mint', name: 'ネオ・シアン・ミント', req: 800, color: '#14B8A6' },
-                { id: 'cyber', name: 'ディープ・サイバー・ナイト', req: 1000, color: '#6366F1' }
+                { id: 'pistachio', name: 'ピスタチオ', req: 0, color: '#36A46F' },
+                { id: 'lavender', name: 'ラベンダー', req: 200, color: '#8B5CF6' },
+                { id: 'skywash', name: 'スカイ', req: 400, color: '#0EA5E9' },
+                { id: 'apricot', name: 'アプリコット', req: 600, color: '#F97316' },
+                { id: 'mint', name: 'ミント', req: 800, color: '#14B8A6' },
+                { id: 'cyber', name: 'サイバーナイト', req: 1000, color: '#6366F1' }
             ];
             themes.forEach(t => {
                 let btn = document.createElement('button');
                 const unlocked = getTotalExpAll() >= t.req || t.req === 0;
                 const selected = currentTheme === t.id;
-                btn.className = `theme-option flex justify-between items-center w-full p-4 rounded-2xl font-extrabold text-left ${unlocked ? 'cursor-pointer' : 'is-locked cursor-not-allowed'}`;
-                if(unlocked) {
-                    btn.innerHTML = `
-                        <div class="flex items-center gap-4 min-w-0">
-                            <div class="theme-swatch" style="color:${t.color}"></div>
-                            <span class="text-base md:text-lg text-slate-800 truncate">${t.name}</span>
-                        </div>
-                        <i data-lucide="${selected ? 'check' : 'circle'}" class="w-5 h-5 ${selected ? 'text-slate-800' : 'text-slate-300'}"></i>`;
-                    btn.onclick = () => applyTheme(t.id);
-                } else {
-                    btn.disabled = true;
-                    btn.innerHTML = `
-                        <div class="flex items-center gap-4 min-w-0">
-                            <div class="theme-swatch text-slate-300"></div>
-                            <span class="text-base md:text-lg truncate">${t.name}</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-sm md:text-base font-extrabold text-slate-400 shrink-0">
-                            <i data-lucide="lock" class="w-4 h-4"></i> ${t.req} EXP
-                        </div>`;
-                }
+                btn.className = `theme-option ${selected ? 'is-selected' : ''} ${unlocked ? '' : 'is-locked'}`;
+                btn.style.setProperty('--theme-sample', t.color);
+                btn.setAttribute('aria-pressed', String(selected));
+                btn.innerHTML = `<span class="theme-preview" aria-hidden="true"><span class="theme-preview-line"></span><span class="theme-preview-pill"></span><span class="theme-preview-dot"></span></span><span class="theme-card-bottom"><span class="theme-card-name">${t.name}</span><span class="theme-card-state">${unlocked ? (selected ? '<i data-lucide="check" aria-hidden="true"></i> 選択中' : '選ぶ') : ''}</span></span>`;
+                btn.disabled = !unlocked;
+                if(unlocked) btn.onclick = () => applyTheme(t.id);
                 list.appendChild(btn);
             });
-            lucide.createIcons(); showModal('modal-theme');
+            lucide.createIcons(); showModal('modal-theme'); document.querySelector('#modal-theme .theme-close').focus();
         }
         function applyTheme(t) { document.documentElement.setAttribute('data-theme', t); window.localStorage.setItem('wm_studio_v1_theme', t); closeModal('modal-theme'); }
 
@@ -2120,6 +2103,7 @@
         }
 
         function renderLearnPhase() {
+            resetLearnChoiceFeedback();
             document.getElementById('learn-4choice').classList.add('hidden');
             document.getElementById('learn-typing').classList.add('hidden');
             document.getElementById('learn-audio-btn').classList.add('hidden');
@@ -2177,7 +2161,7 @@
                                 b.classList.add('pointer-events-none');
                                 if(b !== btn) b.classList.add('opacity-50');
                             });
-                            setTimeout(() => { learnIndex++; renderLearnProgress(); renderLearnPhase(); }, learnPhase === 2 ? 1100 : 800);
+                            showLearnChoiceFeedback(target);
                         } else {
                             playSound('wrong'); markLearnMistake(target); recordError(target.en); recordLearnReviewWord(target);
                             btn.disabled = true;
@@ -3442,7 +3426,7 @@
     <script src="choice-shortcuts.js?v=20261004-learning2"></script>
 <script src="buddy-interactions.js?v=20261004-learning2"></script>
 <script src="learning-next.js?v=20261004-boss7"></script>
-<script src="daily-boss.js?v=7"></script></body>
+<script src="daily-boss.js?v=7"></script><script src="learn-choice-feedback.js?v=1"></script></body>
 </html>
 
 
