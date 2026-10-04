@@ -33,16 +33,29 @@ function wordStudyNote(target) {
  if(source){return [source.note,source.phrase&&source.translation?`${source.phrase} ｜ ${source.translation}`:''].filter(Boolean).join('\n');}
  return wordMemoryTips[target.en.toLowerCase()]||'';
 }
+function highlightExampleWord(example,target) {
+ const full=example.full || example.sentence.replace(/\(\s*\)/g,example.answer||target.en);
+ const hole=/\(\s*\)/.exec(example.sentence||'');
+ if(hole){
+  const prefix=example.sentence.slice(0,hole.index),suffix=example.sentence.slice(hole.index+hole[0].length);
+  if(full.startsWith(prefix)&&full.endsWith(suffix)){
+   let start=prefix.length,end=full.length-suffix.length;
+   // The workbook may leave the suffix outside the blank: (    )s / (    )ed.
+   while(start>0&&/[A-Za-z]/.test(full[start-1]))start--;
+   while(end<full.length&&/[A-Za-z]/.test(full[end]))end++;
+   if(end>start)return escapeHtml(full.slice(0,start))+`<strong>${escapeHtml(full.slice(start,end))}</strong>`+escapeHtml(full.slice(end));
+  }
+ }
+ const word=(example.answer||target.en).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+ return full.split(new RegExp(`(\\b${word}\\b)`,'gi')).map((p,i)=>i%2?`<strong>${escapeHtml(p)}</strong>`:escapeHtml(p)).join('');
+}
 function qcExampleHtml(target) {
  const example=(window.exampleQuestions||[]).find(e=>e.en===target.en && e.cat===target.cat)
   || (window.exampleQuestions||[]).find(e=>e.en===target.en);
  const tip=wordStudyNote(target);
  let html='';
  if(example){
-  const full=example.full || example.sentence.replace(/\(\s*\)/g,example.answer||target.en);
-  const word=(example.answer||target.en).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  const parts=full.split(new RegExp(`(\\b${word}\\b)`,'gi'));
-  const highlighted=parts.map((p,i)=>i%2?`<strong>${escapeHtml(p)}</strong>`:escapeHtml(p)).join('');
+  const highlighted=highlightExampleWord(example,target);
   html+=`<div class="qc-example"><p class="qc-example-en">${highlighted}</p><p class="qc-example-jp">${escapeHtml(example.jp)}</p></div>`;
  }
  if(tip)html+=`<div class="qc-memory"><p>${escapeHtml(tip)}</p></div>`;
