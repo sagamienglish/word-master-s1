@@ -654,8 +654,10 @@
             </div>
             <div class="flex-grow flex flex-col items-center justify-center w-full">
                 <button id="qc-audio-btn" onclick="replayAudio()" class="mb-6 text-primary bg-primaryLight p-4 rounded-full transition-colors hidden cursor-pointer"><i data-lucide="volume-2" class="w-8 h-8"></i></button>
+                <div id="qc-answer" class="hidden" aria-live="polite"></div>
                 <div id="qc-text" class="text-3xl md:text-5xl font-extrabold text-slate-800 mb-12 text-center w-full px-2 break-words"></div>
                 <div id="qc-choices" class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 px-2"></div>
+                <div id="qc-feedback" class="hidden"></div>
             </div>
         </div>
 
@@ -2363,6 +2365,7 @@
         let qcIndex = 0, qcTargets = [];
         function init4Choice(source) { if(typeof beginLearningInsight==='function')beginLearningInsight(); qcTargets = shuffle(source).slice(0, 5); qcIndex = 0; render4Choice(); }
         function render4Choice() {
+            resetQcFeedback();
             if(qcIndex >= qcTargets.length) { playSound('match'); showResult("Completed", `${qcTargets.length}問やり遂げました！`, buildPracticedWordsHtml(qcTargets), "win"); addExp(qcTargets.length); return; }
             document.getElementById('qc-current').innerText = qcIndex + 1;
             document.getElementById('qc-total').textContent=qcTargets.length;
@@ -2390,12 +2393,13 @@
                         if(typeof noteLearningAnswer==='function')noteLearningAnswer(target.en,true);
                         playSound('correct'); playAudio(target.en);
                         btn.className = 'w-full bg-primary border-primary text-white font-bold py-5 rounded-xl text-lg shadow-md animate-pop';
-                        Array.from(container.children).forEach(b => b.onclick = null);
-                        setTimeout(() => { qcIndex++; render4Choice(); }, 800);
+                        Array.from(container.children).forEach(b => {b.onclick = null;b.disabled = true;});
+                        showQcFeedback(target,isEnToJp);
                     } else {
                         playSound('wrong'); recordError(target.en);
+                        btn.disabled = true;btn.onclick = null;
                         btn.classList.add('bg-slate-50', 'text-slate-300', 'border-slate-200', 'pointer-events-none');
-                        document.getElementById('qc-text').classList.add('animate-pulse'); setTimeout(()=> document.getElementById('qc-text').classList.remove('animate-pulse'), 300);
+                        btn.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:240});
                     }
                 };
                 container.appendChild(btn);
@@ -3417,6 +3421,7 @@
             setTimeout(() => showResult(title, desc, extra, winner === 2 ? "vs" : "win"), 1450);
         }
     </script>
+    <script src="qc-feedback.js"></script>
     <script src="studio.js"></script>
     <script src="collection.js"></script>
     <script src="exploration.js"></script>

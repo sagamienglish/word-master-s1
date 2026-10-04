@@ -128,3 +128,17 @@ button[data-choice-key]::before{content:attr(data-choice-key);position:absolute;
 #modal-setup .setup-start>svg:last-child{margin-left:8px}
 @media(max-width:520px){#modal-setup .setup-panel{padding:22px;border-radius:24px}#setup-title{font-size:22px}#setup-options-container label:has(input){font-size:12px;padding:12px 8px}.setup-material{margin-bottom:18px}}
 @media(prefers-reduced-motion:reduce){#modal-setup *{animation:none!important;transition:none!important}}
+
+/* Correct answers remain on screen until the learner chooses Next. */
+#qc-answer{font-size:clamp(36px,6vw,64px);font-weight:850;color:var(--color-primary);text-align:center;line-height:1.15;margin:8px 0 14px;overflow-wrap:anywhere;animation:pop .25s ease-out}
+#screen-4choice.qc-answered #qc-text{font-size:clamp(18px,3vw,28px);margin-bottom:24px;color:var(--color-text-muted)!important}
+#screen-4choice.qc-answered #qc-choices button{padding-top:12px;padding-bottom:12px;font-size:16px}
+#qc-feedback{width:100%;padding:0 8px;margin-top:20px;color:var(--color-text-main)}
+.qc-example,.qc-memory{padding:16px 20px;border-radius:16px;background:var(--color-slate-50);margin-bottom:12px}
+.qc-feedback-label{display:block;font-size:10px;font-weight:750;color:var(--color-text-muted);letter-spacing:.06em;margin-bottom:7px}
+.qc-example-en{font-size:18px;line-height:1.6}.qc-example-en strong{color:var(--color-primary);font-weight:850}
+.qc-example-jp{font-size:13px;line-height:1.7;color:var(--color-text-muted);margin-top:5px}
+.qc-memory{border-left:3px solid var(--color-primary);background:var(--color-primaryLight)}.qc-memory p{font-size:13px;line-height:1.8}
+.qc-next{display:flex;align-items:center;justify-content:center;gap:22px;min-height:48px;padding:12px 26px;background:var(--color-primary);color:white;font-weight:750;border-radius:12px;margin:16px 0 20px auto}.qc-next:hover{background:var(--color-primaryHover)}
+@media(max-width:650px){#screen-4choice.qc-answered>div:last-child{justify-content:flex-start}#screen-4choice.qc-answered #qc-choices{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}#screen-4choice.qc-answered #qc-choices button{font-size:13px;padding:12px 10px 12px 30px}.qc-example,.qc-memory{padding:14px 16px}.qc-example-en{font-size:16px}}
+@media(prefers-reduced-motion:reduce){#qc-answer{animation:none!important}}
