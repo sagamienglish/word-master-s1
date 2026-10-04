@@ -43,7 +43,7 @@ function saveCompanionState() {try{localStorage.setItem(companionStorageKey,JSON
 function getActiveCompanionExp(){const s=getCompanionState();return s.owned[s.active].xp;}
 function companionGrowth(xp){let level=1;companionLevels.forEach((threshold,i)=>{if(xp>=threshold)level=i+1;});const next=companionLevels[level];const previous=companionLevels[level-1];return{level,stage:level>=7?3:level>=4?2:1,pct:next?Math.min(100,(xp-previous)/(next-previous)*100):100,remaining:next?next-xp:0};}
 function companionTicketDate(){const now=new Date();return [now.getFullYear(),String(now.getMonth()+1).padStart(2,'0'),String(now.getDate()).padStart(2,'0')].join('-');}
-function companionTicketCost(){const count=Object.keys(getCompanionState().owned).length;return count<=5?50:count<=10?75:count<=15?100:200;}
+function companionTicketCost(){const count=Object.keys(getCompanionState().owned).length;return count<=5?50:count<=10?100:count<=15?200:400;}
 function grantCompanionTicket(){const s=getCompanionState(),r=s.ticketReward,today=companionTicketDate();if(Object.keys(s.owned).length>=companionCatalog.length || r.lastEarned===today || r.progress<companionTicketCost())return;const before={...r};r.progress-=companionTicketCost();r.tickets++;r.lastEarned=today;if(!saveCompanionState())s.ticketReward=before;}
 function companionTicketCount(){grantCompanionTicket();return getCompanionState().ticketReward.tickets;}
 function companionImage(c,stage=1){return stage>1 && c.growthImages ? c.growthImages[Math.min(3,stage)-2] || c.image : c.image;}
