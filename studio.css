@@ -167,3 +167,26 @@ button[data-choice-key]::before{content:attr(data-choice-key);position:absolute;
 @keyframes growth-transform{0%{opacity:1;filter:brightness(1)}70%{opacity:1;filter:brightness(3);transform:scale(1.05)}100%{opacity:0;filter:brightness(3);transform:scale(1.1)}}
 @keyframes growth-ring{0%{opacity:0;transform:scale(.5)}40%{opacity:1}100%{opacity:.5;transform:scale(1.2)}}
 @media(prefers-reduced-motion:reduce){.growth-overlay *{animation:none!important}.growth-before{display:none}.growth-after{opacity:1}}
+
+/* Evolution builds energy, transforms the silhouette, then reveals the new form. */
+.is-evolving,.is-awakening{--reveal-glow:var(--growth-color)}.is-awakening{--reveal-glow:#f4cc67}
+.is-evolving .growth-reveal,.is-awakening .growth-reveal{height:280px;margin:16px -12px;border-radius:22px;background:radial-gradient(ellipse at center,#223c61,#111c31 74%);overflow:hidden}
+.is-evolving .growth-reveal img,.is-awakening .growth-reveal img{z-index:3;width:250px;height:250px}
+.is-evolving .growth-before,.is-awakening .growth-before{animation:evolve-charge 2.3s ease-in forwards}
+.is-evolving .growth-after,.is-awakening .growth-after{animation:evolve-reveal 1.2s 2.15s cubic-bezier(.16,.8,.2,1) both;filter:drop-shadow(0 0 18px var(--reveal-glow))}
+.is-evolving .growth-ring,.is-awakening .growth-ring{width:225px;height:225px;border:2px solid var(--reveal-glow);box-shadow:0 0 22px var(--reveal-glow),inset 0 0 22px var(--reveal-glow);animation:evolve-orbit 2.3s ease-in both;z-index:1}
+.growth-energy{position:absolute;inset:0;z-index:2;pointer-events:none}
+.growth-energy i{position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:var(--reveal-glow);box-shadow:0 0 12px var(--reveal-glow);animation:energy-gather 2s var(--delay) ease-in both}
+.growth-shockwave{position:absolute;left:50%;top:50%;width:45px;height:45px;border-radius:50%;border:4px solid var(--reveal-glow);z-index:4;box-shadow:0 0 25px var(--reveal-glow);animation:evolve-wave 1s 2.15s ease-out both;pointer-events:none}
+.growth-burst{position:absolute;inset:0;background:radial-gradient(circle,#fff5cd 0%,color-mix(in srgb,var(--reveal-glow) 60%,transparent) 18%,transparent 65%);z-index:4;animation:evolve-burst .8s 2.05s ease-out both;pointer-events:none}
+.is-evolving .growth-sparks,.is-awakening .growth-sparks{z-index:5;animation:growth-arrive .8s 2.5s both}
+.is-evolving .growth-name,.is-evolving .growth-level,.is-awakening .growth-name,.is-awakening .growth-level{display:block;animation:growth-arrive .6s 2.35s both}
+.is-awakening .growth-reveal{background:radial-gradient(ellipse,#49412d,#171b2d 75%)}
+.is-awakening .growth-panel{box-shadow:0 0 90px #e7b44f60}.is-awakening .growth-kicker{color:#a97917}
+@keyframes evolve-charge{0%{opacity:1;transform:scale(1);filter:brightness(1)}35%{transform:scale(.95);filter:brightness(1.3) drop-shadow(0 0 8px var(--reveal-glow))}75%{opacity:1;transform:scale(1.04);filter:brightness(0) invert(1) drop-shadow(0 0 25px var(--reveal-glow))}95%{opacity:1;transform:scale(.85);filter:brightness(0) invert(1) drop-shadow(0 0 40px var(--reveal-glow))}100%{opacity:0;transform:scale(.3)}}
+@keyframes evolve-reveal{0%{opacity:0;transform:scale(.3) translateY(12px);filter:brightness(2) drop-shadow(0 0 35px var(--reveal-glow))}50%{opacity:1;transform:scale(1.09) translateY(-4px);filter:brightness(1.3) drop-shadow(0 0 25px var(--reveal-glow))}100%{opacity:1;transform:scale(1);filter:brightness(1) drop-shadow(0 0 12px var(--reveal-glow))}}
+@keyframes evolve-orbit{0%{opacity:0;transform:scale(1.1) rotate(0)}30%{opacity:.8}80%{opacity:1;transform:scale(.68) rotate(170deg)}100%{opacity:0;transform:scale(.2) rotate(240deg)}}
+@keyframes energy-gather{0%{opacity:0;transform:rotate(var(--angle)) translateX(165px) scale(.5)}20%{opacity:1}85%{opacity:1}100%{opacity:0;transform:rotate(var(--angle)) translateX(8px) scale(1.6)}}
+@keyframes evolve-wave{0%{opacity:1;transform:translate(-50%,-50%) scale(.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(9)}}
+@keyframes evolve-burst{0%{opacity:0;transform:scale(.5)}25%{opacity:.8}100%{opacity:0;transform:scale(1.4)}}
+@media(prefers-reduced-motion:reduce){.growth-overlay *{animation:none!important}.growth-energy,.growth-shockwave,.growth-burst,.growth-before{display:none}.growth-after,.growth-name,.growth-level{opacity:1!important}}
