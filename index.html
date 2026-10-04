@@ -864,6 +864,14 @@
         </div>
     </div>
 
+
+    <div id="modal-learn-preview" role="dialog" aria-modal="true" aria-labelledby="learn-preview-title" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div class="learn-preview-panel">
+        <header><div><span class="setup-eyebrow">BEFORE YOU START</span><h2 id="learn-preview-title">今回学ぶ <span id="learn-preview-count">10</span>語</h2><p>ヒントを確認してから、４択に挑戦。</p></div><button type="button" aria-label="学習をやめてホームへ" onclick="closeModal('modal-learn-preview');navTo('dashboard')">×</button></header>
+        <div id="learn-preview-list"></div>
+        <footer><button type="button" onclick="beginLearnPreviewSession()">４択を始める <span aria-hidden="true">→</span></button></footer>
+      </div>
+    </div>
     <div id="modal-theme" class="hidden fixed inset-0 bg-slate-900/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-surface rounded-2xl p-5 md:p-6 w-full max-w-xl shadow-xl animate-pop border border-slate-100">
             <div class="flex justify-between items-center mb-5">
@@ -2094,7 +2102,7 @@
             learnTargets = shuffle(source).slice(0, 10);
             learnSessionTargets = [...learnTargets];
             learnIndex = 0; learnPhase = 1; learnMistakes = new Set(); learnSessionMistakes = new Set(); learnSkipSpelling = skipSpelling;
-            renderLearnProgress(); renderLearnPhase();
+            renderLearnProgress(); showLearnPreview();
         }
         
         function endLearnEarly() { navTo('dashboard'); }
@@ -3421,7 +3429,9 @@
             setTimeout(() => showResult(title, desc, extra, winner === 2 ? "vs" : "win"), 1450);
         }
     </script>
+    <script src="word-study-notes.js"></script>
     <script src="qc-feedback.js"></script>
+    <script src="learn-preview.js"></script>
     <script src="studio.js"></script>
     <script src="collection.js"></script>
     <script src="exploration.js"></script>

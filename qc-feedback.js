@@ -28,10 +28,15 @@ const wordMemoryTips = {
  interested:'人の気持ちは interested、興味を引くものは interesting。I am interested in ～ と覚えよう。',
  suggest:'suggest ～ing は「～することを提案する」。suggestion（提案）もセットで覚えよう。'
 };
+function wordStudyNote(target) {
+ const source=window.wordStudyNotes?.[target.cat+'::'+target.en.toLowerCase()];
+ if(source){return [source.note,source.phrase&&source.translation?`${source.phrase} ｜ ${source.translation}`:''].filter(Boolean).join('\n');}
+ return wordMemoryTips[target.en.toLowerCase()]||'';
+}
 function qcExampleHtml(target) {
  const example=(window.exampleQuestions||[]).find(e=>e.en===target.en && e.cat===target.cat)
   || (window.exampleQuestions||[]).find(e=>e.en===target.en);
- const tip=wordMemoryTips[target.en.toLowerCase()];
+ const tip=wordStudyNote(target);
  let html='';
  if(example){
   const full=example.full || example.sentence.replace(/\(\s*\)/g,example.answer||target.en);
