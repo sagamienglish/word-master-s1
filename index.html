@@ -502,7 +502,7 @@
     <link rel="stylesheet" href="studio.css?v=20261004-growth2">
     <link rel="stylesheet" href="collection.css?v=20261004-learning2">
     <link rel="stylesheet" href="exploration.css?v=20261004-learning2">
-</head>
+<link rel="stylesheet" href="daily-boss.css?v=7"></head>
 <body class="flex flex-col">
 
     <header class="studio-header">
@@ -523,7 +523,7 @@
                     <div class="studio-lesson-meta"><span>最大10語</span><span>意味 → 音声 → 綴り</span></div>
                     <button class="studio-start" onclick="initAudio(); openSetupModal('learn')">学習を始める <i data-lucide="arrow-right" aria-hidden="true"></i></button>
                 </div>
-                <section class="today-review" id="today-review" aria-label="今日の復習"></section>
+                <div class="review-boss-column"><section class="today-review" id="today-review" aria-label="今日の復習"></section><section id="daily-boss-entry" hidden aria-label="今日のボス戦"></section></div>
                 <div class="studio-companion">
                     <div class="studio-orbit" aria-hidden="true"></div>
                     <button type="button" id="mascot-container" onclick="handleMascotTap(event)" class="mascot-float" aria-label="相棒にタッチ"></button>
@@ -1608,6 +1608,7 @@
         function getCategoryExp(cat = currentCategory) { return categoryExp[cat] || 0; }
         function getTotalExpAll() { return Object.values(categoryExp).reduce((sum, value) => sum + (parseInt(value) || 0), 0); }
         function addExp(amount, cat = currentCategory) {
+            if(typeof noteBossDailyExp === "function") noteBossDailyExp(amount);
             if(typeof getCompanionState === 'function') getCompanionState();
             categoryExp[cat] = getCategoryExp(cat) + amount;
             totalExp = getCategoryExp(currentCategory);
@@ -3440,8 +3441,9 @@
     <script src="exploration.js?v=20261004-learning2"></script>
     <script src="choice-shortcuts.js?v=20261004-learning2"></script>
 <script src="buddy-interactions.js?v=20261004-learning2"></script>
-<script src="learning-next.js?v=20261004-learning2"></script>
-</body>
+<script src="learning-next.js?v=20261004-boss7"></script>
+<script src="daily-boss.js?v=7"></script></body>
 </html>
+
 
 

@@ -53,7 +53,7 @@ function renderCompanionGoal(){
  const text=g.level===10?`${c.name}は最高レベルに到達！`:`${c.name}の${g.stage===1?'成長':g.stage===2?'覚醒':'最高レベル'}まで、あと${Math.max(0,target-s.owned[c.id].xp)} EXP`;
  host.innerHTML=`<div><strong>${owned.length===20?'次は、お気に入りを育てよう。':'相棒の育成目標'}</strong><p>${text}</p></div><span>覚醒 ${awakened} / ${companionCatalog.length}体</span>`;
 }
-const learningBackupKeys = new Set(["wm_studio_v1_last_category","wm_studio_v1_sec","wm_studio_v1_date","wm_studio_v1_streak","wm_studio_v1_word_status","wm_studio_v1_cpu","wm_studio_v1_stamina","wm_studio_v1_stamina_time","wm_studio_v1_category_exp","wm_studio_v1_exp","wm_studio_v1_learn_review","wm_studio_v1_weekly_study","wm_studio_v1_last_run","wm_studio_v1_theme","wm_studio_v1_mastery_history","wm_studio_v1_review_schedule","wm_studio_v1_companion_collection_v1"]);
+const learningBackupKeys = new Set(["wm_studio_v1_boss_daily","wm_studio_v1_last_category","wm_studio_v1_sec","wm_studio_v1_date","wm_studio_v1_streak","wm_studio_v1_word_status","wm_studio_v1_cpu","wm_studio_v1_stamina","wm_studio_v1_stamina_time","wm_studio_v1_category_exp","wm_studio_v1_exp","wm_studio_v1_learn_review","wm_studio_v1_weekly_study","wm_studio_v1_last_run","wm_studio_v1_theme","wm_studio_v1_mastery_history","wm_studio_v1_review_schedule","wm_studio_v1_companion_collection_v1"]);
 function captureLearningBackup(){
  const entries={};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(learningBackupKeys.has(key))entries[key]=localStorage.getItem(key);}
  return {format:'word-master-backup',version:1,createdAt:new Date().toISOString(),entries};
@@ -63,6 +63,7 @@ function validateLearningBackup(data){
  const entries={};
  for(const [key,value] of Object.entries(data.entries)){
   if(!learningBackupKeys.has(key) || typeof value!=='string' || value.length>1500000)throw Error('対応していない記録が含まれています。');
+  if(key==='wm_studio_v1_boss_daily'){const b=JSON.parse(value);if(!b||typeof b.day!=='string'||!/^\d{4}-\d{1,2}-\d{1,2}$/.test(b.day)||!Number.isFinite(b.exp)||b.exp<0||typeof b.attempted!=='boolean'||typeof b.rewarded!=='boolean')throw Error('ボス戦の記録が不正です。');}
   if(key==='wm_studio_v1_companion_collection_v1'){
    const s=JSON.parse(value);if(s.version!==1 || !s.owned || Array.isArray(s.owned) || typeof s.owned!=='object')throw Error('相棒の記録を読み込めません。');
    for(const [id,entry] of Object.entries(s.owned))if(!companionCatalog.some(c=>c.id===id) || !entry || !Number.isFinite(entry.xp) || entry.xp<0)throw Error('相棒の経験値が不正です。');
