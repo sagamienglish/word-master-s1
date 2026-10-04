@@ -45,7 +45,7 @@ function qcExampleHtml(target) {
   const highlighted=parts.map((p,i)=>i%2?`<strong>${escapeHtml(p)}</strong>`:escapeHtml(p)).join('');
   html+=`<div class="qc-example"><p class="qc-example-en">${highlighted}</p><p class="qc-example-jp">${escapeHtml(example.jp)}</p></div>`;
  }
- if(tip)html+=`<div class="qc-memory"><span class="qc-feedback-label">覚えるヒント</span><p>${escapeHtml(tip)}</p></div>`;
+ if(tip)html+=`<div class="qc-memory"><p>${escapeHtml(tip)}</p></div>`;
  return html;
 }
 function handleQcNextKey(event) {
