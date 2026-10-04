@@ -499,9 +499,9 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 10px; }
     </style>
-    <link rel="stylesheet" href="studio.css">
-    <link rel="stylesheet" href="collection.css">
-    <link rel="stylesheet" href="exploration.css">
+    <link rel="stylesheet" href="studio.css?v=20261004-learning2">
+    <link rel="stylesheet" href="collection.css?v=20261004-learning2">
+    <link rel="stylesheet" href="exploration.css?v=20261004-learning2">
 </head>
 <body class="flex flex-col">
 
@@ -2102,7 +2102,7 @@
             learnTargets = shuffle(source).slice(0, 10);
             learnSessionTargets = [...learnTargets];
             learnIndex = 0; learnPhase = 1; learnMistakes = new Set(); learnSessionMistakes = new Set(); learnSkipSpelling = skipSpelling;
-            renderLearnProgress(); showLearnPreview();
+            renderLearnProgress(); if(typeof showLearnPreview === 'function') { try { showLearnPreview(); } catch(error) { console.error('Learning preview failed',error); renderLearnPhase(); } } else { renderLearnPhase(); }
         }
         
         function endLearnEarly() { navTo('dashboard'); }
@@ -3429,15 +3429,15 @@
             setTimeout(() => showResult(title, desc, extra, winner === 2 ? "vs" : "win"), 1450);
         }
     </script>
-    <script src="word-study-notes.js"></script>
-    <script src="qc-feedback.js"></script>
-    <script src="learn-preview.js"></script>
-    <script src="studio.js"></script>
-    <script src="collection.js"></script>
-    <script src="exploration.js"></script>
-    <script src="choice-shortcuts.js"></script>
-<script src="buddy-interactions.js"></script>
-<script src="learning-next.js"></script>
+    <script src="word-study-notes.js?v=20261004-learning2"></script>
+    <script src="qc-feedback.js?v=20261004-learning2"></script>
+    <script src="learn-preview.js?v=20261004-learning2"></script>
+    <script src="studio.js?v=20261004-learning2"></script>
+    <script src="collection.js?v=20261004-learning2"></script>
+    <script src="exploration.js?v=20261004-learning2"></script>
+    <script src="choice-shortcuts.js?v=20261004-learning2"></script>
+<script src="buddy-interactions.js?v=20261004-learning2"></script>
+<script src="learning-next.js?v=20261004-learning2"></script>
 </body>
 </html>
 
