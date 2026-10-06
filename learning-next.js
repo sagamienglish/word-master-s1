@@ -63,7 +63,7 @@ function validateLearningBackup(data){
  const entries={};
  for(const [key,value] of Object.entries(data.entries)){
   if(!learningBackupKeys.has(key) || typeof value!=='string' || value.length>1500000)throw Error('対応していない記録が含まれています。');
-  if(key==='wm_studio_v1_boss_daily'){const b=JSON.parse(value);if(!b||typeof b.day!=='string'||!/^\d{4}-\d{1,2}-\d{1,2}$/.test(b.day)||!Number.isFinite(b.exp)||b.exp<0||typeof b.attempted!=='boolean'||typeof b.rewarded!=='boolean')throw Error('ボス戦の記録が不正です。');}
+  if(key==='wm_studio_v1_boss_daily'){const b=JSON.parse(value);if(!b||typeof b.day!=='string'||!/^\d{4}-\d{1,2}-\d{1,2}$/.test(b.day)||!Number.isFinite(b.exp)||b.exp<0||typeof b.attempted!=='boolean'||typeof b.rewarded!=='boolean'||(b.attempts!==undefined&&(!Number.isInteger(b.attempts)||b.attempts<0||b.attempts>5)))throw Error('ボス戦の記録が不正です。');}
   if(key==='wm_studio_v1_companion_collection_v1'){
    const s=JSON.parse(value);if(s.version!==1 || !s.owned || Array.isArray(s.owned) || typeof s.owned!=='object')throw Error('相棒の記録を読み込めません。');
    for(const [id,entry] of Object.entries(s.owned))if(!companionCatalog.some(c=>c.id===id) || !entry || !Number.isFinite(entry.xp) || entry.xp<0)throw Error('相棒の経験値が不正です。');
