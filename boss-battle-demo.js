@@ -1,11 +1,11 @@
-let targets=['consider','provide','suggest','protect','depend'].map(w=>window.exampleQuestions.find(e=>e.en===w));
+let targets=['consider','provide','suggest','protect','depend','increase','allow','prevent','require','develop'].map(w=>window.exampleQuestions.find(e=>e.en===w));
 const bosses=[{name:'石竜ガルド',image:'assets/boss-stone-dragon-anime.png',music:'boss1.mp3'},{name:'炎鳥イグニス',image:'assets/companions/flare-phoenix-stage-3.png',music:'boss2.mp3'},{name:'符狼ルーン',image:'assets/companions/rune-wolf-stage-3.png',music:'boss3.mp3'}];
 let selectedBoss=0,musicOn=false;
 let index=0,bossHp=100,allyHp=100,hints=2,letters=[],marks=[],cursor=0,phase='question',assisted=false,deadline=0,nextTimer,clearTimer;
 const el=id=>document.getElementById(id);
 const dailyBridge=new URLSearchParams(location.search).get('daily')==='1' && window.parent!==window ? window.parent.dailyBossBridge : null;
 let dailyStarted=false;
-if(dailyBridge){const setup=dailyBridge.getSetup();targets=window.exampleQuestions.filter(e=>e.cat===setup.category).sort(()=>Math.random()-.5).slice(0,5);el('ally').querySelector('img').src=setup.image;el('ally').querySelector('img').alt=setup.name;document.querySelector('.stats.left strong').textContent=setup.name;document.querySelector('header p').textContent='勝利は１日１回 · 挑戦は最大５回';document.querySelector('#selection > div > p:last-child').textContent=`あと${setup.remaining}回挑戦できます。開始すると１回使います。`;document.querySelector('#result > div > p:last-of-type').textContent='';el('result').querySelector('button').textContent='ホームに戻る';}
+if(dailyBridge){const setup=dailyBridge.getSetup();targets=window.exampleQuestions.filter(e=>e.cat===setup.category).sort(()=>Math.random()-.5).slice(0,10);el('ally').querySelector('img').src=setup.image;el('ally').querySelector('img').alt=setup.name;document.querySelector('.stats.left strong').textContent=setup.name;document.querySelector('header p').textContent='勝利は１日１回 · 挑戦は最大５回';document.querySelector('#selection > div > p:last-child').textContent=`あと${setup.remaining}回挑戦できます。開始すると１回使います。`;document.querySelector('#result > div > p:last-of-type').textContent='';el('result').querySelector('button').textContent='ホームに戻る';}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function answer(){const e=targets[index];return (highlightExampleWord(e,e).match(/<strong>(.*?)<\/strong>/)?.[1]||e.answer).toLowerCase()}
 function hp(){for(const [who,n]of [['ally',allyHp],['boss',bossHp]]){el(who+'-hp').style.width=n+'%';el(who+'-label').textContent=`HP ${n} / 100`}}
