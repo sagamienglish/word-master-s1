@@ -28,3 +28,13 @@ document.addEventListener('DOMContentLoaded',()=>{
  const observer=new MutationObserver(decorateChoiceKeys);
  ['qc-choices','learn-choices','sc-choices'].forEach(id=>{const container=document.getElementById(id);if(container)observer.observe(container,{childList:true});});
 });
+function handleSentenceNextKey(event){
+ if(event.defaultPrevented||event.key!=='Enter'||event.repeat||event.isComposing||event.ctrlKey||event.altKey||event.metaKey||event.shiftKey)return;
+ if(typeof activeScreen==='undefined'||activeScreen!=='sentence_choice'||scLayout!=='single'||!scLocked)return;
+ if(event.target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(event.target?.tagName))return;
+ if([...document.querySelectorAll('[id^="modal-"]')].some(m=>!m.classList.contains('hidden')))return;
+ const button=document.getElementById('sc-next-btn');
+ if(!button||button.disabled||button.classList.contains('hidden'))return;
+ event.preventDefault();button.click();
+}
+document.addEventListener('keydown',handleSentenceNextKey);
