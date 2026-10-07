@@ -68,7 +68,7 @@ function validateLearningBackup(data){
    const s=JSON.parse(value);if(s.version!==1 || !s.owned || Array.isArray(s.owned) || typeof s.owned!=='object')throw Error('相棒の記録を読み込めません。');
    for(const [id,entry] of Object.entries(s.owned))if(!companionCatalog.some(c=>c.id===id) || !entry || !Number.isFinite(entry.xp) || entry.xp<0)throw Error('相棒の経験値が不正です。');
    if(!s.owned['blue-dragon'] || !s.owned[s.active])throw Error('相棒の選択が不正です。');
-   if(s.ticketReward && (s.ticketReward.version!==2 || !Number.isInteger(s.ticketReward.tickets) || s.ticketReward.tickets<0 || !Number.isFinite(s.ticketReward.progress) || s.ticketReward.progress<0 || typeof s.ticketReward.lastEarned!=='string'))throw Error('チケットの記録が不正です。');
+   if(s.ticketReward && (s.ticketReward.version!==2 || !Number.isInteger(s.ticketReward.tickets) || s.ticketReward.tickets<0 || !Number.isFinite(s.ticketReward.progress) || s.ticketReward.progress<0 || typeof s.ticketReward.lastEarned!=='string'||(s.ticketReward.progressDay!==undefined&&typeof s.ticketReward.progressDay!=='string')))throw Error('チケットの記録が不正です。');
   }else if(['wm_studio_v1_word_status','wm_studio_v1_review_schedule','wm_studio_v1_category_exp','wm_studio_v1_weekly_study','wm_studio_v1_mastery_history','wm_studio_v1_last_run','wm_studio_v1_learn_review'].includes(key)){
    const parsed=JSON.parse(value);if((!parsed || typeof parsed!=='object') && !(key==='wm_studio_v1_last_run' && parsed===null))throw Error('学習記録の形式が不正です。');
    if(key==='wm_studio_v1_learn_review' && (!Array.isArray(parsed)||parsed.some(item=>!item||typeof item.en!=='string'||!wordData.some(w=>w.en===item.en&&w.cat===item.cat)||!Number.isFinite(item.time))))throw Error('復習リストが不正です。');
