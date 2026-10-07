@@ -1469,8 +1469,8 @@
             document.addEventListener('keydown', handleHardwareTyping);
             
             setInterval(() => {
-                if (activeScreen === 'dashboard' || activeScreen === 'vocabulary') {
-                    totalSeconds++; window.localStorage.setItem('wm_studio_v1_sec', totalSeconds.toString());
+                if (isStudyTimeActive()) {
+                    totalSeconds++; addStudySecond(); window.localStorage.setItem('wm_studio_v1_sec', totalSeconds.toString());
                     updateTimeUI();
                 }
                 updateStaminaLogic();
@@ -3426,7 +3426,7 @@
     <script src="choice-shortcuts.js?v=20261006-enter"></script>
 <script src="buddy-interactions.js?v=20261004-learning2"></script>
 <script src="learning-next.js?v=20261006-boss5"></script>
-<script src="daily-boss.js?v=10"></script><script src="learn-choice-feedback.js?v=1"></script></body>
+<script src="daily-boss.js?v=10"></script><script src="learn-choice-feedback.js?v=1"></script><script src="study-time.js?v=20261007"></script></body>
 </html>
 
 

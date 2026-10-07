@@ -42,3 +42,5 @@ async function startBattle(){if(dailyBridge){if(dailyStarted)return;el('start-ba
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopMusic()});
 el('bgm').addEventListener('error',()=>{el('music-status').textContent='BGMを読み込めませんでした';stopMusic()});
 
+
+window.bossBattleIsActive=()=>['question','checking','correct','damaged'].includes(phase);
